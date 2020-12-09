@@ -11,7 +11,7 @@
 # Run:      docker run -ti --rm --name=exo -p 80:8080 exoplatform/exo
 #           docker run -d --name=exo -p 80:8080 exoplatform/exo
 
-FROM  exoplatform/jdk:openjdk-11-ubuntu-1804
+FROM  exoplatform/jdk:openjdk-14-ubuntu-2004
 LABEL maintainer="eXo Platform <docker@exoplatform.com>"
 
 # Install the needed packages
@@ -41,7 +41,7 @@ ARG DOWNLOAD_URL
 # this allow to specifiy a user to download a protected binary
 ARG DOWNLOAD_USER
 # allow to override the list of addons to package by default
-ARG ADDONS="exo-jdbc-driver-mysql:2.0.1 exo-jdbc-driver-postgresql:2.0.0"
+ARG ADDONS="exo-jdbc-driver-mysql:2.0.1 exo-jdbc-driver-postgresql:2.1.0"
 # Default base directory on the plf archive
 ARG ARCHIVE_BASE_DIR=platform-${EXO_VERSION}
 
