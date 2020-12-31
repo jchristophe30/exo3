@@ -34,7 +34,7 @@ RUN wget -nv -q -O /usr/bin/yq https://github.com/mikefarah/yq/releases/download
   } && chmod a+x /usr/bin/yq
 
 # Build Arguments and environment variables
-ARG EXO_VERSION=6.1.0-RC02
+ARG EXO_VERSION=6.2.x-clustering-SNAPSHOT
 
 # this allow to specify an eXo Platform download url
 ARG DOWNLOAD_URL
@@ -65,15 +65,18 @@ RUN mkdir -p ${EXO_DATA_DIR}         && chown ${EXO_USER}:${EXO_GROUP} ${EXO_DAT
   mkdir -p ${EXO_TMP_DIR}          && chown ${EXO_USER}:${EXO_GROUP} ${EXO_TMP_DIR}  && \
   mkdir -p ${EXO_LOG_DIR}          && chown ${EXO_USER}:${EXO_GROUP} ${EXO_LOG_DIR}
 
+COPY ./plf-enterprise-tomcat-standalone.zip /srv/downloads/eXo-Platform-${EXO_VERSION}.zip
+
 # Install eXo Platform
-RUN if [ -n "${DOWNLOAD_USER}" ]; then PARAMS="-u ${DOWNLOAD_USER}"; fi && \
-  if [ ! -n "${DOWNLOAD_URL}" ]; then \
-  echo "Building an image with eXo Platform version : ${EXO_VERSION}"; \
-  EXO_VERSION_SHORT=$(echo ${EXO_VERSION} | awk -F "\." '{ print $1"."$2}'); \
-  DOWNLOAD_URL="https://downloads.exoplatform.org/public/releases/platform/${EXO_VERSION_SHORT}/${EXO_VERSION}/platform-${EXO_VERSION}.zip"; \
-  fi && \
-  curl ${PARAMS} -sS -L -o /srv/downloads/eXo-Platform-${EXO_VERSION}.zip ${DOWNLOAD_URL} && \
-  unzip -q /srv/downloads/eXo-Platform-${EXO_VERSION}.zip -d /srv/downloads/ && \
+# RUN if [ -n "${DOWNLOAD_USER}" ]; then PARAMS="-u ${DOWNLOAD_USER}"; fi && \
+  #if [ ! -n "${DOWNLOAD_URL}" ]; then \
+  # echo "Building an image with eXo Platform version : ${EXO_VERSION}"; \
+  #EXO_VERSION_SHORT=$(echo ${EXO_VERSION} | awk -F "\." '{ print $1"."$2}'); \
+  #DOWNLOAD_URL="https://downloads.exoplatform.org/public/releases/platform/${EXO_VERSION_SHORT}/${EXO_VERSION}/platform-${EXO_VERSION}.zip"; \
+  #fi && \
+  #curl ${PARAMS} -sS -L -o /srv/downloads/eXo-Platform-${EXO_VERSION}.zip ${DOWNLOAD_URL} && \
+RUN unzip -q /srv/downloads/eXo-Platform-${EXO_VERSION}.zip -d /srv/downloads/ && \
+  ls /srv/downloads/ && \
   rm -f /srv/downloads/eXo-Platform-${EXO_VERSION}.zip && \
   mv /srv/downloads/${ARCHIVE_BASE_DIR} ${EXO_APP_DIR} && \
   chown -R ${EXO_USER}:${EXO_GROUP} ${EXO_APP_DIR} && \
